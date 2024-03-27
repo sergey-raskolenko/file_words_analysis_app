@@ -1,3 +1,5 @@
 from django.contrib import admin
+from file.models import UploadedFile
 
-# Register your models here.
+
+admin.site.register(UploadedFile)
