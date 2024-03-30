@@ -1,5 +1,28 @@
-<ul>
-{% for file in files %}
-    <li><a href="{% url 'file:file_detail' file.pk %}">{{ file }}</a></li>
-{% endfor %}
-</ul>
+{% extends 'file/base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-md-center">
+    <div class="col-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Filename</th>
+                <th>Date Created</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for file in files %}
+            <tr>
+                <td>{{ file.pk }}</td>
+                <td><a href="{% url 'file:file_detail' file.pk %}">{{ file }}</a></td>
+                <td>{{ file.uploaded_at }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+{% endblock %}
