@@ -1,0 +1,18 @@
+<table>
+    <thead>
+        <tr>
+            <th>Word</th>
+            <th>TF</th>
+            <th>IDF</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for word in processed_words %}
+        <tr>
+            <td>{{ word.word }}</td>
+            <td>{{ word.tf }}</td>
+            <td>{{ word.idf }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
