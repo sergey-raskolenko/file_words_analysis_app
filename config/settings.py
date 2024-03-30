@@ -130,4 +130,4 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_FILE_FORMATS = []
+ALLOWED_FILE_FORMATS = ['.txt',]

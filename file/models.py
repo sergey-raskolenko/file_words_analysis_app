@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-
 NULLABLE = {'null': True, 'blank': True}
 
 
 class UploadedFile(models.Model):
+    """
+    Модель для загруженных файлов
+    """
     file = models.FileField(upload_to='', verbose_name='Файл')
     uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата загрузки')
     cleaned_text = ArrayField(models.CharField(max_length=100), verbose_name='Очищенный список слов', **NULLABLE)
@@ -23,6 +25,9 @@ class UploadedFile(models.Model):
 
 
 class ProcessedWord(models.Model):
+    """
+    Модель для обработанных слов файла
+    """
     file = models.ForeignKey(UploadedFile, on_delete=models.CASCADE, verbose_name='Файл')
     word = models.CharField(max_length=100, verbose_name='Слово')
     tf = models.FloatField(verbose_name='Частота слова', **NULLABLE)

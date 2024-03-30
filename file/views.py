@@ -1,8 +1,7 @@
 import os
 from collections import Counter
-
 from django.db.models import Count
-from django.shortcuts import render
+
 from django.views.generic import CreateView, ListView, DetailView
 from django.urls import reverse, reverse_lazy
 
@@ -12,31 +11,21 @@ from file.models import UploadedFile, ProcessedWord
 from file.services import clean_text
 
 
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadedFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            uploaded_file = form.save()
-            # Логика по подсчету tf-idf слов в файле
-    else:
-        form = UploadedFileForm()
-    return render(
-        request, 'file/uploadedfile_form.html', {'form': form}
-    )
-
-
 class FileUploadView(CreateView):
+    """
+    Контроллер для загрузки текстовых файлов через форму с препроцессингом, подсчетом TF и IDF для каждого слова
+    """
     model = UploadedFile
     form_class = UploadedFileForm
 
     def get_success_url(self):
-        return reverse('file:upload_file')
+        return reverse('file:file_list')
 
     def form_valid(self, form):
 
         self.object = form.save()
         file_path = os.path.join(MEDIA_ROOT, str(self.object.file))
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             text = f.read()
             self.object.cleaned_text = clean_text(text)
 
@@ -49,7 +38,7 @@ class FileUploadView(CreateView):
         word_objects = []
 
         for word, count in word_counts.items():
-            tf = round(count / total_words, 3)
+            tf = round(count / total_words, 5)
             word_objects.append(ProcessedWord(word=word, file=self.object, tf=tf))
 
         ProcessedWord.objects.bulk_create(word_objects)
@@ -59,13 +48,16 @@ class FileUploadView(CreateView):
         files_amount = UploadedFile.objects.all().count()
 
         for item in word_count_per_file:
-            idf = item['num_files'] / files_amount
+            idf = round(item['num_files'] / files_amount, 5)
             ProcessedWord.objects.filter(word=item['word']).update(idf=idf)
 
         return super().form_valid(form)
 
 
 class UploadedFileList(ListView):
+    """
+    Контроллер для отображения списка загруженных текстовых файлов
+    """
     model = UploadedFile
     success_url = reverse_lazy('file:file_list')
 
@@ -77,6 +69,9 @@ class UploadedFileList(ListView):
 
 
 class UploadedFileDetailView(DetailView):
+    """
+    Контроллер для отображения детальной информации о текстовом файле
+    """
     model = UploadedFile
 
     def get_context_data(self, **kwargs):

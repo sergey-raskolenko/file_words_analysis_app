@@ -1,4 +1,6 @@
 import re
+from typing import List
+
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -12,9 +14,9 @@ REGULAR = r'[^\w\s]'
 REGULAR_URL = r'(http\S+)|(www\S+)|([\w\d]+www\S+)|([\w\d]+http\S+)'
 
 
-def clean_text(text):
+def clean_text(text) -> List[str]:
     """
-    Функция очищает текст от специальных символов, ссылок, чисел и пробелов
+    Функция очищает текст от специальных символов, ссылок, чисел и пробелов.
     """
     text = text.lower()
 
