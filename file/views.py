@@ -15,8 +15,15 @@ class FileUploadView(CreateView):
     """
     Контроллер для загрузки текстовых файлов через форму с препроцессингом, подсчетом TF и IDF для каждого слова
     """
+
     model = UploadedFile
     form_class = UploadedFileForm
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['title'] = "Загрузка файла"
+
+        return context_data
 
     def get_success_url(self):
         return reverse('file:file_list')
@@ -44,7 +51,9 @@ class FileUploadView(CreateView):
         ProcessedWord.objects.bulk_create(word_objects)
 
         # Подсчет IDF
-        word_count_per_file = ProcessedWord.objects.values('word').annotate(num_files=Count('file'))
+        word_count_per_file = ProcessedWord.objects.values('word').annotate(
+            num_files=Count('file')
+        )
         files_amount = UploadedFile.objects.all().count()
 
         for item in word_count_per_file:
@@ -58,12 +67,14 @@ class UploadedFileList(ListView):
     """
     Контроллер для отображения списка загруженных текстовых файлов
     """
+
     model = UploadedFile
     success_url = reverse_lazy('file:file_list')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data['files'] = UploadedFile.objects.all()
+        context_data['title'] = "Список файлов"
 
         return context_data
 
@@ -72,9 +83,14 @@ class UploadedFileDetailView(DetailView):
     """
     Контроллер для отображения детальной информации о текстовом файле
     """
+
     model = UploadedFile
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['processed_words'] = ProcessedWord.objects.filter(file=self.object.id).order_by('-idf', '-tf')[:50]
+        context_data['processed_words'] = ProcessedWord.objects.filter(
+            file=self.object.id
+        ).order_by('-idf', '-tf')[:50]
+        context_data['title'] = f"Файл: {self.object.file}"
+
         return context_data

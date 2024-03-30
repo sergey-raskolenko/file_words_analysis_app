@@ -9,17 +9,38 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='UploadedFile',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('file', models.FileField(upload_to='', verbose_name='Файл')),
-                ('uploaded_at', models.DateTimeField(auto_now_add=True, verbose_name='Дата загрузки')),
-                ('cleaned_text', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=100), blank=True, null=True, size=None, verbose_name='Очищенный список слов')),
+                (
+                    'uploaded_at',
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name='Дата загрузки'
+                    ),
+                ),
+                (
+                    'cleaned_text',
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=models.CharField(max_length=100),
+                        blank=True,
+                        null=True,
+                        size=None,
+                        verbose_name='Очищенный список слов',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Uploaded File',
@@ -30,11 +51,36 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProcessedWord',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
                 ('word', models.CharField(max_length=100, verbose_name='Слово')),
-                ('tf', models.FloatField(blank=True, null=True, verbose_name='Частота слова')),
-                ('idf', models.FloatField(blank=True, null=True, verbose_name='Обратная частота документа')),
-                ('file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='file.uploadedfile', verbose_name='Файл')),
+                (
+                    'tf',
+                    models.FloatField(
+                        blank=True, null=True, verbose_name='Частота слова'
+                    ),
+                ),
+                (
+                    'idf',
+                    models.FloatField(
+                        blank=True, null=True, verbose_name='Обратная частота документа'
+                    ),
+                ),
+                (
+                    'file',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='file.uploadedfile',
+                        verbose_name='Файл',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Processed Word',

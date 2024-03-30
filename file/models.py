@@ -8,9 +8,14 @@ class UploadedFile(models.Model):
     """
     Модель для загруженных файлов
     """
+
     file = models.FileField(upload_to='', verbose_name='Файл')
     uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата загрузки')
-    cleaned_text = ArrayField(models.CharField(max_length=100), verbose_name='Очищенный список слов', **NULLABLE)
+    cleaned_text = ArrayField(
+        models.CharField(max_length=100),
+        verbose_name='Очищенный список слов',
+        **NULLABLE,
+    )
 
     class Meta:
         verbose_name = 'Uploaded File'
@@ -28,7 +33,10 @@ class ProcessedWord(models.Model):
     """
     Модель для обработанных слов файла
     """
-    file = models.ForeignKey(UploadedFile, on_delete=models.CASCADE, verbose_name='Файл')
+
+    file = models.ForeignKey(
+        UploadedFile, on_delete=models.CASCADE, verbose_name='Файл'
+    )
     word = models.CharField(max_length=100, verbose_name='Слово')
     tf = models.FloatField(verbose_name='Частота слова', **NULLABLE)
     idf = models.FloatField(verbose_name='Обратная частота документа', **NULLABLE)

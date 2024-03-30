@@ -9,6 +9,7 @@ class UploadedFileForm(forms.ModelForm):
     """
     Форма для загрузки файлов с проверкой его расширения
     """
+
     class Meta:
         model = UploadedFile
         fields = ('file',)
